@@ -1,0 +1,9 @@
+name: 'Setup SAP BTP subaccount'
+on: workflow_dispatch
+
+jobs:
+  setupbtp:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: hashicorp/setup-terraform@v2
