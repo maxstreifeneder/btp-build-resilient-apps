@@ -2,12 +2,12 @@ name: 'Setup SAP BTP subaccount'
 on: workflow_dispatch
 
 env:
-    BTP_USERNAME: ${secrets.USERNAME}
-    BTP_PASSWORD: ${secrets.PASSWORD}
-    TF_VAR_CF_globalaccount: ${secrets.TF_VAR_globalaccount}
-    TF_VAR_CF_region: ${vars.TF_VAR_region}
-    TF_VAR_CF_USER: ${secrets.USERNAME}
-    TF_VAR_CF_PW: ${secrets.PASSWORD}
+    BTP_USERNAME: ${{ secrets.USERNAME }}
+    BTP_PASSWORD: ${{ secrets.PASSWORD}}
+    TF_VAR_CF_globalaccount: ${{ secrets.TF_VAR_globalaccount}}
+    TF_VAR_CF_region: ${{ vars.TF_VAR_region}}
+    TF_VAR_CF_USER: ${{ secrets.USERNAME}}
+    TF_VAR_CF_PW: ${{ secrets.PASSWORD}}
 
 defaults:
   run:
@@ -21,7 +21,7 @@ jobs:
     - name: Use variables
       run: |
         echo region: $TF_VAR_CF_region
-        echo secret/username: $TF_VAR_CF_USER
+        echo secret/username: $TF_CF_USER
     - uses: hashicorp/setup-terraform@v2
 
     - name: Terraform fmt
