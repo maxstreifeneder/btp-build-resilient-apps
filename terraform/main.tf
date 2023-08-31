@@ -11,7 +11,7 @@ locals {
 # Creation of subaccount
 ###############################################################################################
 resource "btp_subaccount" "project" {
-  name      = var.subaccount_name
+  name      = var.subaccount_name + "" + local.random_uuid
   subdomain = local.project_subaccount_domain
   region    = lower(var.region)
 }
