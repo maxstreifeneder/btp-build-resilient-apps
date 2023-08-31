@@ -39,7 +39,7 @@ jobs:
 
     - name: List directory
       run: |
-        ls -la
+        ls -la 
 
     - name: Terraform plan 
       id: plan 
