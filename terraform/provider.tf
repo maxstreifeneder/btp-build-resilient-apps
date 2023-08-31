@@ -24,13 +24,13 @@ variable "CF_PW" {}
 
 # Get the Cloudfoundry API endpoint
 module "cloudfoundry_api" {
-  source            = "../modules/envinstance-cloudfoundry-apiurl"
+  source            = "./modules/envinstance-cloudfoundry-apiurl"
   environment_label = var.cf_environment_label
 }
 
 // Configuration is described in https://registry.terraform.io/providers/cloudfoundry-community/cloudfoundry/latest/docs
 provider "cloudfoundry" {
-  api_url = module.cloudfoundry_api.api_url
+  api_url  = module.cloudfoundry_api.api_url
   password = var.CF_PW
-  user = var.CF_USER
+  user     = var.CF_USER
 }
