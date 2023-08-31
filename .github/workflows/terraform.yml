@@ -16,12 +16,12 @@ defaults:
 jobs:
   setupbtp:
     runs-on: ubuntu-latest
-    steps:
+    steps:  
+    - uses: actions/checkout@v3
     - name: Use variables
       run: |
         echo "region: $TF_CF_region"
         echo "secret/username: $TF_CF_USER"
-    - uses: actions/checkout@v3
     - uses: hashicorp/setup-terraform@v2
 
     - name: Terraform fmt
