@@ -3,8 +3,8 @@
 ###############################################################################################
 locals {
   random_uuid               = uuid()
-  project_subaccount_domain = "teched23-resilient-apps"
-  project_subaccount_cf_org = "teched-dev"
+  project_subaccount_domain = "github-actions-teched23-resilient-apps"
+  project_subaccount_cf_org = "github-actions-teched-dev"
 }
 
 ###############################################################################################
