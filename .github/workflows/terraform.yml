@@ -20,8 +20,8 @@ jobs:
     - uses: actions/checkout@v3
     - name: Use variables
       run: |
-        echo "region: $TF_CF_region"
-        echo "secret/username: $TF_CF_USER"
+        echo region: $TF_CF_region
+        echo secret/username: $TF_CF_USER
     - uses: hashicorp/setup-terraform@v2
 
     - name: Terraform fmt
@@ -36,6 +36,10 @@ jobs:
     - name: Terraform Validate
       id: validate
       run: terraform validate -no-color
+
+    - name: List directory
+      run: |
+        ls -la
 
     - name: Terraform plan 
       id: plan 
