@@ -47,3 +47,5 @@ mochawesome-report/
 
 *terraform.lock.hcl
 *.terraform*
+*.env
+*.secrets

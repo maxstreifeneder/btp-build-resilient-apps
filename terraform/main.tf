@@ -12,7 +12,7 @@ locals {
 ###############################################################################################
 resource "btp_subaccount" "project" {
   name      = "${var.subaccount_name}-${local.random_uuid}"
-  subdomain = local.project_subaccount_domain
+  subdomain = "${local.random_uuid}"
   region    = lower(var.region)
 }
 
@@ -34,4 +34,27 @@ resource "btp_subaccount_role_collection_assignment" "subaccount-service-admins"
   subaccount_id        = btp_subaccount.project.id
   role_collection_name = "Subaccount Service Administrator"
   user_name            = each.value
+}
+
+######################################################################
+# Creation of Cloud Foundry environment
+######################################################################
+module "cloudfoundry_environment" {
+  source                = "./modules/envinstance-cloudfoundry/"
+  subaccount_id         = btp_subaccount.project.id
+  instance_name         = local.project_subaccount_cf_org
+  plan_name             = "standard"
+  cloudfoundry_org_name = local.project_subaccount_cf_org
+}
+
+######################################################################
+# Creation of Cloud Foundry space
+######################################################################
+module "cloudfoundry_space" {
+  source              = "./modules/cloudfoundry-space/"
+  cf_org_id           = module.cloudfoundry_environment.org_id
+  name                = var.cf_space_name
+  cf_space_managers   = var.cf_space_managers
+  cf_space_developers = var.cf_space_developers
+  cf_space_auditors   = var.cf_space_auditors
 }

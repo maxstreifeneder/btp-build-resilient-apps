@@ -10,7 +10,10 @@ build-parameters:
     - builder: custom
       commands:
         - npm install --production
-        - npm run build:cf
+        - npx -p @sap/cds-dk cds build --production
+        - npm run cleanup:ts
+        - npm run build:ts
+        - npm run build --prefix app/businesspartners
 modules:
   - name: BPVerification-srv
     type: nodejs

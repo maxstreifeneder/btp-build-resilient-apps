@@ -1,12 +1,15 @@
 name: 'Setup SAP BTP subaccount'
 on: workflow_dispatch
 
-defaults:
-  run:
-    working-directory: terraform
-
 jobs:
   setupbtp:
+    outputs:
+      apiendpoint: ${{ steps.tfvars.outputs.apiendpoint }}
+      cforg: ${{ steps.tfvars.outputs.cforg }}
+      space: ${{ steps.tfvars.outputs.space }}
+    defaults:
+      run:
+        working-directory: ./terraform
     env:
       BTP_USERNAME: ${{ secrets.USERNAME }}
       BTP_PASSWORD: ${{ secrets.PASSWORD }}
@@ -15,36 +18,102 @@ jobs:
       TF_VAR_CF_USER: ${{ secrets.USERNAME }}
       TF_VAR_CF_PW: ${{ secrets.PASSWORD }}
     runs-on: ubuntu-latest
-    steps:  
-    - uses: actions/checkout@v3
-    - name: Use variables
-      run: |
-        echo region: $TF_VAR_CF_region
-        echo secret/username: $TF_CF_USER
-        echo ${{ secrets.USERNAME }}
-    - uses: hashicorp/setup-terraform@v2
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use variables
+        run: |
+          echo ${{ vars.TF_VAR_globalaccount }}
+          echo region: $TF_VAR_region
+          echo secret/username: $TF_VAR_CF_USER
+          echo ${{ secrets.USERNAME }}
+      - uses: hashicorp/setup-terraform@v2
+      - name: List directory
+        run: |
+          ls -la
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
 
-    - name: Terraform fmt
-      id: fmt
-      run: terraform fmt -check
-      continue-on-error: true
+      - name: Terraform Init
+        id: init
+        run: terraform init
 
-    - name: Terraform Init
-      id: init
-      run: terraform init
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
 
-    - name: Terraform Validate
-      id: validate
-      run: terraform validate -no-color
+      - name: Terraform plan
+        id: plan
+        run: terraform plan --var-file terraform.tfvars -out tfplan.out
 
-    - name: List directory
-      run: |
-        ls -la 
+      - name: Terraform apply
+        id: apply
+        run: terraform apply tfplan.out
 
-    - name: Terraform plan 
-      id: plan 
-      run: terraform plan --var-file terraform.tfvars -out tfplan.out
+      - name: provide variables for other jobs
+        id: tfvars
+        run: |
+          apiendpoint=$(terraform output api_endpoint -raw)
+          space=$(terraform output space_name -raw)
+          cforg=$(terraform output cf_org_id -raw)
+          echo "das sind variablen"
+          echo $cforg
+          echo $space
+          echo $apiendpoint
+          echo "das waren variablen"
 
-    - name: Terraform apply 
-      id: apply 
-      run: terraform apply tfplan.out 
+          echo "::set-output name=apiendpoint::$apiendpoint"
+          echo "::set-output name=cforg::$cforg"
+          echo "::set-output name=space::$space"
+  buildmta:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+      - name: Install MTA Build Tool
+        run: npm install -g mbt
+      - name:
+        run: npm install
+      - name: npm run CDS build
+        run: |
+          npx -p @sap/cds-dk cds build --production
+
+      - name: trigger mbt
+        run: |
+          mbt build -e live.mtaext --mtar BPVerification.mtar
+
+      - name: List directory
+        run: |
+          ls -la
+
+      - uses: actions/upload-artifact@master
+        with:
+          name: BPVerification.mtar
+          path: mta_archives/BPVerification.mtar
+
+  deploy_mta:
+    runs-on: ubuntu-latest
+    needs: [setupbtp, buildmta]
+    steps:
+      - name: Download artefact
+        uses: actions/download-artifact@master
+        with:
+          name: BPVerification.mtar
+      - name: List directory
+        run: |
+          ls -la
+      - name: Deploy
+        uses: SAP/project-piper-action@install-cf-cli
+        with:
+          command: cloudFoundryDeploy
+        env:
+          PIPER_username: ${{ secrets.USERNAMAE }}
+          PIPER_password: ${{ secrets.PASSWORD }}
+          PIPER_apiEndpoint: ${{ needs.setupbtp.outputs.apiendpoint }}
+          PIPER_deployTool: 'mtaDeployPlugin'
+          PIPER_org: ${{ needs.setupbtp.outputs.cforg }}
+          PIPER_space: ${{ needs.setupbtp.outputs.space }}
