@@ -54,9 +54,9 @@ jobs:
       - name: provide variables for other jobs
         id: tfvars
         run: |
-          apiendpoint=$(terraform output api_endpoint -raw)
-          space=$(terraform output space_name -raw)
-          cforg=$(terraform output cf_org_id -raw)
+          apiendpoint=$(terraform output api_endpoint)
+          space=$(terraform output space_name)
+          cforg=$(terraform output cf_org_id)
           echo "das sind variablen"
           echo $cforg
           echo $space
