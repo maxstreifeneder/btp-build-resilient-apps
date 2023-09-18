@@ -67,6 +67,7 @@ jobs:
           echo "space=$space" >> $GITHUB_OUTPUT
           echo "GITHUB OUTPUT: -------------------"
           echo $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT
   buildmta:
     runs-on: ubuntu-latest
     steps:
