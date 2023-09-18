@@ -54,18 +54,17 @@ jobs:
       - name: provide variables for other jobs
         id: tfvars
         run: |
-          apiendpoint=$(terraform output api_endpoint)
-          space=$(terraform output space_name)
-          cforg=$(terraform output cf_org_id)
+          apiendpoint=$(terraform output api_endpoint -raw)
+          space=$(terraform output space_name -raw)
+          cforg=$(terraform output cf_org_id -raw)
           echo "das sind variablen"
           echo $cforg
           echo $space
           echo $apiendpoint
           echo "das waren variablen"
-
-          echo "::set-output name=apiendpoint::$apiendpoint"
-          echo "::set-output name=cforg::$cforg"
-          echo "::set-output name=space::$space"
+          echo "apiendpoint=$apiendpoint" >> $GITHUB_OUTPUT
+          echo "cforg=$apiendpoint" >> $GITHUB_OUTPUT
+          echo "space=$space" >> GITHUB_OUTPUT
   buildmta:
     runs-on: ubuntu-latest
     steps:
@@ -107,7 +106,7 @@ jobs:
         run: |
           ls -la
       - name: Deploy
-        uses: SAP/project-piper-action@install-cf-cli
+        uses: SAP/project-piper-action@master
         with:
           command: cloudFoundryDeploy
         env:
