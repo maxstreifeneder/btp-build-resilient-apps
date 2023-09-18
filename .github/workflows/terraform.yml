@@ -63,8 +63,10 @@ jobs:
           echo $apiendpoint
           echo "das waren variablen"
           echo "apiendpoint=$apiendpoint" >> $GITHUB_OUTPUT
-          echo "cforg=$apiendpoint" >> $GITHUB_OUTPUT
-          echo "space=$space" >> GITHUB_OUTPUT
+          echo "cforg=$cforg" >> $GITHUB_OUTPUT
+          echo "space=$space" >> $GITHUB_OUTPUT
+          echo "GITHUB OUTPUT: -------------------"
+          echo $GITHUB_OUTPUT
   buildmta:
     runs-on: ubuntu-latest
     steps:
