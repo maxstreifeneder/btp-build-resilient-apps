@@ -43,7 +43,7 @@ module "cloudfoundry_environment" {
   source                = "./modules/envinstance-cloudfoundry/"
   subaccount_id         = btp_subaccount.project.id
   instance_name         = local.project_subaccount_cf_org
-  plan_name             = "free"
+  plan_name             = "standard"
   cloudfoundry_org_name = local.project_subaccount_cf_org
 }
 
