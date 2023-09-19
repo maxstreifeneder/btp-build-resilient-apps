@@ -103,7 +103,7 @@ resource "btp_subaccount_entitlement" "cicd" {
 # connectivitiy
 module "create_cf_service_instance_01" {
   depends_on   = [module.cloudfoundry_space, btp_subaccount_entitlement.name, time_sleep.wait_a_few_seconds]
-  source       = "../modules/cloudfoundry-service-instance/"
+  source       = "./modules/cloudfoundry-service-instance/"
   cf_space_id  = module.cloudfoundry_space.id
   service_name = "connectivity"
   plan_name    = "lite"
@@ -112,7 +112,7 @@ module "create_cf_service_instance_01" {
 # destination
 module "create_cf_service_instance_02" {
   depends_on   = [module.cloudfoundry_space, btp_subaccount_entitlement.name, time_sleep.wait_a_few_seconds]
-  source       = "../modules/cloudfoundry-service-instance/"
+  source       = "./modules/cloudfoundry-service-instance/"
   cf_space_id  = module.cloudfoundry_space.id
   service_name = "destination"
   plan_name    = "lite"
@@ -121,7 +121,7 @@ module "create_cf_service_instance_02" {
 # html5-apps-repo
 module "create_cf_service_instance_03" {
   depends_on   = [module.cloudfoundry_space, btp_subaccount_entitlement.name, time_sleep.wait_a_few_seconds]
-  source       = "../modules/cloudfoundry-service-instance/"
+  source       = "./modules/cloudfoundry-service-instance/"
   cf_space_id  = module.cloudfoundry_space.id
   service_name = "html5-apps-repo"
   plan_name    = "app-host"
@@ -130,7 +130,7 @@ module "create_cf_service_instance_03" {
 # enterprise-messaging
 module "create_cf_service_instance_ems" {
   depends_on   = [module.cloudfoundry_space, btp_subaccount_entitlement.name, time_sleep.wait_a_few_seconds]
-  source       = "../modules/cloudfoundry-service-instance/"
+  source       = "./modules/cloudfoundry-service-instance/"
   cf_space_id  = module.cloudfoundry_space.id
   service_name = "enterprise-messaging"
   plan_name    = "default"
@@ -162,7 +162,7 @@ resource "cloudfoundry_service_key" "key_enterprise-messaging" {
 # application-logs
 module "create_cf_service_instance_05" {
   depends_on   = [module.cloudfoundry_space, btp_subaccount_entitlement.name, time_sleep.wait_a_few_seconds]
-  source       = "../modules/cloudfoundry-service-instance/"
+  source       = "./modules/cloudfoundry-service-instance/"
   cf_space_id  = module.cloudfoundry_space.id
   service_name = "application-logs"
   plan_name    = "lite"
@@ -171,7 +171,7 @@ module "create_cf_service_instance_05" {
 # xsuaa
 module "create_cf_service_instance_06" {
   depends_on   = [module.cloudfoundry_space, btp_subaccount_entitlement.name, time_sleep.wait_a_few_seconds]
-  source       = "../modules/cloudfoundry-service-instance/"
+  source       = "./modules/cloudfoundry-service-instance/"
   cf_space_id  = module.cloudfoundry_space.id
   service_name = "xsuaa"
   plan_name    = "application"
@@ -180,7 +180,7 @@ module "create_cf_service_instance_06" {
 # hana-cloud
 module "create_cf_service_instance_hana_cloud" {
   depends_on   = [module.cloudfoundry_space, btp_subaccount_entitlement.name, time_sleep.wait_a_few_seconds]
-  source       = "../modules/cloudfoundry-service-instance/"
+  source       = "./modules/cloudfoundry-service-instance/"
   cf_space_id  = module.cloudfoundry_space.id
   service_name = "hana-cloud"
   plan_name    = "hana-free"
@@ -189,7 +189,7 @@ module "create_cf_service_instance_hana_cloud" {
 # hana
 module "create_cf_service_instance_08" {
   depends_on   = [module.cloudfoundry_space, btp_subaccount_entitlement.name, module.create_cf_service_instance_hana_cloud, time_sleep.wait_a_few_seconds]
-  source       = "../modules/cloudfoundry-service-instance/"
+  source       = "./modules/cloudfoundry-service-instance/"
   cf_space_id  = module.cloudfoundry_space.id
   service_name = "hana"
   plan_name    = "hdi-shared"
@@ -198,7 +198,7 @@ module "create_cf_service_instance_08" {
 # autoscaler
 module "create_cf_service_instance_09" {
   depends_on   = [module.cloudfoundry_space, btp_subaccount_entitlement.name, time_sleep.wait_a_few_seconds]
-  source       = "../modules/cloudfoundry-service-instance/"
+  source       = "./modules/cloudfoundry-service-instance/"
   cf_space_id  = module.cloudfoundry_space.id
   service_name = "autoscaler"
   plan_name    = "standard"
