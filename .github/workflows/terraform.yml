@@ -52,7 +52,7 @@ jobs:
         run: |
           apiendpoint=$(terraform output -raw api_endpoint)
           space=$(terraform output -raw space_name)
-          cforg=$(terraform output -raw cf_org_id)
+          cforg=$(terraform output -raw cf_org_name)
           echo "apiendpoint=$apiendpoint" >> $GITHUB_OUTPUT
           echo "cforg=$cforg" >> $GITHUB_OUTPUT
           echo "space=$space" >> $GITHUB_OUTPUT
