@@ -27,6 +27,8 @@ jobs:
           echo secret/username: $TF_VAR_CF_USER
           echo ${{ secrets.USERNAME }}
       - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
       - name: List directory
         run: |
           ls -la
