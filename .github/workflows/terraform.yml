@@ -20,12 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use variables
-        run: |
-          echo ${{ vars.TF_VAR_globalaccount }}
-          echo region: $TF_VAR_region
-          echo secret/username: $TF_VAR_CF_USER
-          echo ${{ secrets.USERNAME }}
       - uses: hashicorp/setup-terraform@v2
         with:
           terraform_wrapper: false
@@ -59,23 +53,16 @@ jobs:
           apiendpoint=$(terraform output -raw api_endpoint)
           space=$(terraform output -raw space_name)
           cforg=$(terraform output -raw cf_org_id)
-          echo "das sind variablen"
-          echo $cforg
-          echo $space
-          echo $apiendpoint
-          echo "das waren variablen"
           echo "apiendpoint=$apiendpoint" >> $GITHUB_OUTPUT
           echo "cforg=$cforg" >> $GITHUB_OUTPUT
           echo "space=$space" >> $GITHUB_OUTPUT
-          echo "GITHUB OUTPUT: -------------------"
-          echo $GITHUB_OUTPUT
-          cat $GITHUB_OUTPUT
+
   buildmta:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 18
       - name: Install MTA Build Tool
@@ -90,10 +77,6 @@ jobs:
         run: |
           mbt build -e live.mtaext --mtar BPVerification.mtar
 
-      - name: List directory
-        run: |
-          ls -la
-
       - uses: actions/upload-artifact@master
         with:
           name: BPVerification.mtar
@@ -107,15 +90,12 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: BPVerification.mtar
-      - name: List directory
-        run: |
-          ls -la
 
       - name: Deploy to Cloud Foundry
         uses: guerric-p/cf-cli-action@master
         with:
           cf_api: ${{ needs.setupbtp.outputs.apiendpoint }}
-          cf_username: ${{ secrets.USERNAMAE }}
+          cf_username: ${{ secrets.USERNAME }}
           cf_password: ${{ secrets.PASSWORD }}
           cf_org: ${{ needs.setupbtp.outputs.cforg }}
           cf_space: ${{ needs.setupbtp.outputs.space }}
