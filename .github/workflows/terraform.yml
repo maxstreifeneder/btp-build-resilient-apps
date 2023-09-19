@@ -110,14 +110,13 @@ jobs:
       - name: List directory
         run: |
           ls -la
-      - name: Deploy
-        uses: SAP/project-piper-action@master
+
+      - name: Deploy to Cloud Foundry
+        uses: guerric-p/cf-cli-action@master
         with:
-          command: cloudFoundryDeploy
-        env:
-          PIPER_username: ${{ secrets.USERNAMAE }}
-          PIPER_password: ${{ secrets.PASSWORD }}
-          PIPER_apiEndpoint: ${{ needs.setupbtp.outputs.apiendpoint }}
-          PIPER_deployTool: 'mtaDeployPlugin'
-          PIPER_org: ${{ needs.setupbtp.outputs.cforg }}
-          PIPER_space: ${{ needs.setupbtp.outputs.space }}
+          cf_api: ${{ needs.setupbtp.outputs.apiendpoint }}
+          cf_username: ${{ secrets.USERNAMAE }}
+          cf_password: ${{ secrets.PASSWORD }}
+          cf_org: ${{ needs.setupbtp.outputs.cforg }}
+          cf_space: ${{ needs.setupbtp.outputs.space }}
+          command: deploy BPVerification.mtar -f
