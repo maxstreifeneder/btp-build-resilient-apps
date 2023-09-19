@@ -75,7 +75,7 @@
   "scripts": {
     "update-dependencies": "ncu -u",
     "test": "ts-mocha tests/general.spec.ts --timeout 30000 --reporter mochawesome",
-    "start": "DEBUG=remote cds run --profile production",
+    "start": "DEBUG=remote npx -p @sap/cds run --profile production",
     "buildtypes": "cds2types --cds ./srv/admin.cds --output ./srv/model/entities.ts --debug",
     "build:cf": "npm run build:cds && npm run cleanup:ts && npm run build:ts && npm run build --prefix app/businesspartners",
     "deploy:live": "mbt build -e live.mtaext --mtar BPVerification.mtar && cf deploy mta_archives/BPVerification.mtar",
